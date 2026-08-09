@@ -1,17 +1,33 @@
-What is Kubernates ? 
-  Kubernates is a orchastration platform  that automates the deployment, management and scaling of containerized applications.
+# What is Kubernetes?
 
-  Kubernates will be installed on a server. It consists of multiple clusters. Each cluster will have multiple nodes. A cluster consistes of master node and worker node.
+Kubernetes is an orchestration platform that automates the deployment, management, and scaling of containerized applications across clusters of machines.
 
-  Master Node - manages all the componets with in the cluster.
-  Worker Node - Node where the contarized application run and communicates the status and other info to the master node using kubectl.
+## Kubernetes Architecture
 
-Master Node components - API Server, etcd, Scheduler, controller, Kubernates
-Worker Node Components - Kubectl, container runtime (Docker etc), kubernates
+Kubernetes is installed on servers and organized into **clusters**. Each cluster consists of a **Master Node** (Control Plane) and one or more **Worker Nodes**.
 
-API Server - All the interation s to the cluser flows though api server.
-etcd - consists of cluster information in key value pairs
-Scheduler - Assigns the containers to Nodes
-Controllers - Spins up the new containers
+### Master Node (Control Plane)
+The Master Node manages all components within the cluster and makes global decisions about the cluster.
 
-Kubectl - interacts with the master node and provides all the info about the node and ensure the node is running according to the config
+**Key Components:**
+- **API Server** - The central hub of Kubernetes. All cluster interactions flow through the API Server, making it the entry point for all administrative tasks.
+- **etcd** - A distributed key-value store that holds all cluster configuration data and state information. It serves as the cluster's "source of truth."
+- **Scheduler** - Watches for newly created pods and assigns them to worker nodes based on resource requirements and constraints.
+- **Controller Manager** - Runs controller processes that regulate the state of the cluster (e.g., maintaining desired replica counts, handling node failures).
+- **Kubernetes Control Components** - Ensure the cluster runs according to the specified configuration.
+
+### Worker Node
+Worker Nodes are the machines where containerized applications actually run. They communicate status, metrics, and other information back to the Master Node.
+
+**Key Components:**
+- **kubelet** - An agent that runs on each worker node and communicates with the Master Node to ensure containers are running as expected.
+- **Container Runtime** - Software that runs containers (e.g., Docker, containerd). Manages container lifecycle (create, start, stop, delete).
+- **kube-proxy** - Maintains network rules and enables communication between pods and services within the cluster.
+
+## Communication Flow
+
+The **kubectl** command-line tool is used to interact with the Master Node's API Server. It allows administrators and applications to:
+- Deploy and manage applications
+- Query cluster status and pod information
+- Ensure nodes are running according to the desired configuration
+- View logs, execute commands, and debug applications
