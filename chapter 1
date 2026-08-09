@@ -32,7 +32,17 @@ The **kubectl** command-line tool is used to interact with the Master Node's API
 - Ensure nodes are running according to the desired configuration
 - View logs, execute commands, and debug applications
 
-## Few Kubectl commands
-```kubectl run hello-world```
-```kubectl cluster-info```
-```kubectl get nodes```
+## Few Kubectl Commands
+
+### `kubectl run hello-world`
+**Explanation:** Creates and runs a pod named "hello-world" using a default image. This is the quickest way to deploy a simple containerized application to your Kubernetes cluster without writing any configuration files.
+
+---
+
+### `kubectl cluster-info`
+**Explanation:** Displays information about the Kubernetes cluster, including the API server endpoint, DNS service location, and other control plane details. Useful for verifying cluster connectivity and getting cluster metadata.
+
+---
+
+### `kubectl get nodes`
+**Explanation:** Lists all worker nodes in the cluster and their status (Ready, NotReady, etc.). This command gives you an overview of available compute resources and helps monitor node health.
