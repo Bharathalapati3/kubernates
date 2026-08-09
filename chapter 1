@@ -1,0 +1,17 @@
+What is Kubernates ? 
+  Kubernates is a orchastration platform  that automates the deployment, management and scaling of containerized applications.
+
+  Kubernates will be installed on a server. It consists of multiple clusters. Each cluster will have multiple nodes. A cluster consistes of master node and worker node.
+
+  Master Node - manages all the componets with in the cluster.
+  Worker Node - Node where the contarized application run and communicates the status and other info to the master node using kubectl.
+
+Master Node components - API Server, etcd, Scheduler, controller, Kubernates
+Worker Node Components - Kubectl, container runtime (Docker etc), kubernates
+
+API Server - All the interation s to the cluser flows though api server.
+etcd - consists of cluster information in key value pairs
+Scheduler - Assigns the containers to Nodes
+Controllers - Spins up the new containers
+
+Kubectl - interacts with the master node and provides all the info about the node and ensure the node is running according to the config
