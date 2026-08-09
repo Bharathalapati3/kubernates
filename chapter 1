@@ -31,3 +31,8 @@ The **kubectl** command-line tool is used to interact with the Master Node's API
 - Query cluster status and pod information
 - Ensure nodes are running according to the desired configuration
 - View logs, execute commands, and debug applications
+
+## Few Kubectl commands
+```kubectl run hello-world```
+```kubectl cluster-info```
+```kubectl get nodes```
