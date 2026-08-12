@@ -1,0 +1,42 @@
+# ResourceQuota example for namespace `dev`
+
+# Apply with:
+# kubectl apply -f examples/resourcequota.yaml
+# kubectl get resourcequota -n dev
+# kubectl describe resourcequota compute-resources -n dev
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-resources
+  namespace: dev
+  labels:
+    purpose: example
+spec:
+  hard:
+    # limit number of pods
+    pods: "10"
+    # limit requests across the namespace
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    # limit total container limits across the namespace
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    # limit number of persistent volume claims
+    persistentvolumeclaims: "5"
+    # limit number of services
+    services: "10"
+
+# Optional: a second quota that focuses on object counts (demonstrates multiple quotas per namespace)
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: object-counts
+  namespace: dev
+spec:
+  hard:
+    configmaps: "20"
+    secrets: "50"
+    services: "10"
+    persistentvolumeclaims: "5"
