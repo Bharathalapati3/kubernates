@@ -25,3 +25,11 @@
     selector:
       matchLabels:
         name: pod-1
+
+# Example Command
+
+kubectl create -f replicaset.yml
+
+kubectl get replicaset replicaset-name
+
+kubectl delete replicaset replicaset-name
