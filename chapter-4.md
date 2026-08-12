@@ -153,6 +153,24 @@ kubectl get resourcequota -n dev
 kubectl describe resourcequota compute-resources -n dev
 ```
 
+Example file
+
+A complete example ResourceQuota (two example quotas) is included in the repo at:
+https://github.com/Bharathalapati3/kubernates/blob/main/examples/resourcequota.yaml
+
+Apply the example directly:
+
+```bash
+kubectl apply -f examples/resourcequota.yaml
+kubectl get resourcequota -n dev
+kubectl describe resourcequota compute-resources -n dev
+```
+
+Notes:
+- The example file contains a `compute-resources` quota and an `object-counts` quota to demonstrate different quota types.
+- If a quota is exceeded, Kubernetes will prevent creation or scaling of objects that would violate the quota until usage drops below the quota limits.
+- Combine ResourceQuota with LimitRange to ensure pods/containers request and limit resources so quota enforcement behaves predictably.
+
 - LimitRange (default resource requests/limits within a namespace)
 
 ```yaml
@@ -286,6 +304,10 @@ kubectl describe pod <pod-name>
 ```
 
 5. Apply ResourceQuota or LimitRange if you need limits for the namespace.
+
+```bash
+kubectl apply -f examples/resourcequota.yaml
+```
 
 6. When done, delete the namespace (this deletes all namespace-scoped resources):
 
