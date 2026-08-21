@@ -47,10 +47,10 @@ Common kubectl commands for Pods
   kubectl get events --sort-by=.metadata.creationTimestamp
 
 ## Few other follow up commands
-kubectl get pods                    # check it's running
-kubectl logs nginx                  # view nginx's logs
-kubectl exec -it nginx -- /bin/bash # shell into it
-kubectl delete pod nginx            # clean up when done
+ - kubectl get pods                    # check it's running
+ - kubectl logs nginx                  # view nginx's logs
+ - kubectl exec -it nginx -- /bin/bash # shell into it
+ - kubectl delete pod nginx            # clean up when done
 
 Example Pod manifest (pod.yaml)
 
