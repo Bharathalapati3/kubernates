@@ -1,99 +1,111 @@
-Certification Tip: Imperative Commands
-While you would be working mostly the declarative way - using definition files, imperative commands can help in getting one-time tasks done quickly, as well as generate a definition template easily. This would help save a considerable amount of time during your exams.
+# Certification Tip: Imperative Commands
 
-Before we begin, familiarize yourself with the two options that can come in handy while working with the below commands:
+While you will mostly work the declarative way (using definition files), imperative commands are useful for quick one-off tasks and for generating definition templates that you can save and edit.
 
---dry-run: By default, as soon as the command is run, the resource will be created. If you simply want to test your command, use the --dry-run=client option. This will not create the resource. Instead, tell you whether the resource can be created and if your command is right.
+Before we begin, familiarize yourself with two options that are handy when running the commands below:
 
--o yaml: This will output the resource definition in YAML format on the screen.
+- `--dry-run`:
+  - By default, when you run a kubectl command it will create the resource immediately. Use `--dry-run=client` to test the command without creating the resource. This prints the object that would be sent to the API server without actually sending it.
 
+- `-o yaml`:
+  - Print the resource definition in YAML format to stdout. Combine this with `--dry-run=client` and shell redirection to generate a manifest file you can edit and apply later.
 
+Example: generate a pod manifest and save to a file
 
-Use the above two in combination along with Linux output redirection to generate a resource definition file quickly, that you can then modify and create resources as required, instead of creating the files from scratch.
-
-
-
+```bash
 kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yaml
+```
 
+---
 
+## Pod
 
-POD
-Create an NGINX Pod
+Create an NGINX Pod:
 
+```bash
 kubectl run nginx --image=nginx
+```
 
+Generate the Pod manifest YAML (don't create it):
 
-
-Generate POD Manifest YAML file (-o yaml). Don't create it(--dry-run)
-
+```bash
 kubectl run nginx --image=nginx --dry-run=client -o yaml
+```
 
+---
 
+## Deployment
 
-Deployment
-Create a deployment
+Create a Deployment running NGINX:
 
-kubectl create deployment --image=nginx nginx
+```bash
+kubectl create deployment nginx --image=nginx
+```
 
+Generate the Deployment YAML without creating it:
 
+```bash
+kubectl create deployment nginx --image=nginx --dry-run=client -o yaml
+```
 
-Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
+Create a Deployment with 4 replicas:
 
-kubectl create deployment --image=nginx nginx --dry-run -o yaml
-
-
-
-Generate Deployment with 4 Replicas
-
+```bash
 kubectl create deployment nginx --image=nginx --replicas=4
+```
 
+Scale an existing Deployment:
 
-
-You can also scale deployment using the kubectl scale command.
-
+```bash
 kubectl scale deployment nginx --replicas=4
+```
 
+You can also generate a deployment YAML and save it to a file to edit fields (for example to set `replicas` or add labels) before creating it:
 
+```bash
+kubectl create deployment nginx --image=nginx --dry-run=client -o yaml > nginx-deployment.yaml
+# Edit nginx-deployment.yaml (add/modify replicas, selectors, etc.)
+kubectl apply -f nginx-deployment.yaml
+```
 
-Another way to do this is to save the YAML definition to a file and modify
+---
 
-kubectl create deployment nginx --image=nginx--dry-run=client -o yaml > nginx-deployment.yaml
+## Service
 
+Create a Service named `redis-service` of type ClusterIP to expose a Pod named `redis` on port 6379 (generate YAML only):
 
+```bash
+kubectl expose pod redis --port=6379 --name=redis-service --dry-run=client -o yaml
+```
 
-You can then update the YAML file with the replicas or any other field before creating the deployment.
+Note: `kubectl expose` will automatically use the pod's labels as the Service selector.
 
+Alternatively, generate a ClusterIP Service manifest using `kubectl create service` (this command assumes a selector of `app=redis` and does not automatically use the pod's labels):
 
+```bash
+kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml
+```
 
-Service
-Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379
+Create a NodePort Service named `nginx-service` to expose a Pod's port 80 on node port 30080 (generate YAML only):
 
-kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
+```bash
+kubectl expose pod nginx --port=80 --name=nginx-service --type=NodePort --dry-run=client -o yaml
+```
 
-(This will automatically use the pod's labels as selectors)
+Note: `kubectl expose` will create a NodePort Service but DOES NOT allow specifying the node port directly in the command. To set a specific node port, generate the YAML, add `nodePort: 30080` under the service's `spec.ports[]`, and then apply the manifest.
 
-Or
+Or create a NodePort Service and specify a node port directly:
 
-kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml (This will not use the pods' labels as selectors; instead it will assume selectors as app=redis. You cannot pass in selectors as an option. So it does not work well if your pod has a different label set. So generate the file and modify the selectors before creating the service)
-
-
-
-Create a Service named nginx of type NodePort to expose pod nginx's port 80 on port 30080 on the nodes:
-
-kubectl expose pod nginx --port=80 --name nginx-service --type=NodePort --dry-run=client -o yaml
-
-(This will automatically use the pod's labels as selectors, but you cannot specify the node port. You have to generate a definition file and then add the node port in manually before creating the service with the pod.)
-
-Or
-
+```bash
 kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run=client -o yaml
+```
 
-(This will not use the pods' labels as selectors)
+This `kubectl create service nodeport` form does not automatically pick up the pod's labels as selectors.
 
-Both the above commands have their own challenges. While one of it cannot accept a selector the other cannot accept a node port. I would recommend going with the `kubectl expose` command. If you need to specify a node port, generate a definition file using the same command and manually input the nodeport before creating the service.
+Both approaches have trade-offs: `kubectl expose` uses the pod labels as selectors (convenient) but won't let you specify `nodePort` on the CLI; `kubectl create service` can set `nodePort` but may not use the pod's labels. My recommendation is to use `kubectl expose` to generate a manifest and then edit the YAML if you need to set `nodePort` or tweak selectors.
 
+---
 
+Reference
 
-Reference:
-
-https://kubernetes.io/docs/reference/kubectl/conventions/
+- https://kubernetes.io/docs/reference/kubectl/conventions/
